@@ -1,0 +1,328 @@
+* {
+    color: white;
+    font-family: "Century Gothic", "Apple Gothic", sans-serif;
+}
+
+.font-red {
+    color: #e53935;
+}
+
+.font-blue {
+    color: #1e88e5;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 90px;
+    /* largura da navbar */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar a {
+    margin-bottom: 20px;
+    /* espaçamento entre os ícones */
+}
+
+.navbar .bola-branca {
+    background-color: white;
+    /* fundo branco padrão */
+    border-radius: 50%;
+    /* forma circular */
+    width: 50px;
+    /* tamanho dos círculos */
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease;
+    /* transição suave */
+}
+
+.navbar img {
+    width: 50%;
+    /* tamanho dos ícones */
+    height: 50%;
+}
+
+.bola-vermelha {
+    background-color: #e53935 !important;
+    /* cor vermelha */
+    img {
+        filter: invert(100%); /* inverte as cores do ícone */
+    }
+}
+
+body {
+    margin: 0;
+    background: black;
+    display: grid;
+    width: 100%;
+    grid-template-columns: 100%;
+    text-align: center;
+}
+
+header {
+    text-align: left;
+    margin-left: 25%;
+    width: 75%;
+    height: 1080px;
+    /* background: blue; */
+
+    display: grid;
+    align-items: center;
+
+    h1 {
+        margin-top: 0;
+        /* font-size: 72pt; */
+        font-size: 10vh;
+        margin-bottom: -30px;
+    }
+
+    h2 {
+        /* font-size: 36pt; */
+        font-size: 5vh;
+    }
+}
+
+.conexoes a {
+    text-decoration: none;
+
+    img {
+        width: 45px;
+    }
+}
+
+#sobre-mim-div {
+    /* background-color: #131313; */
+    width: 100%;
+    height: 1080px;
+}
+
+#diplomas {
+    margin-top: 2%;
+    height: 48%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    #eu-section {
+        /* background-color: #e53935; */
+        width: 90%;
+        text-align: right;
+
+        img {
+            width: 50%;
+            min-width: 200px;
+        }
+
+        .conexoes {
+            margin-right: 19%;
+
+            a {
+                img {
+                    margin-top: 20px;
+                    width: 5%;
+                    min-width: 30px;
+                }
+            }
+        }
+
+    }
+
+    #formacoes {
+        width: 90%;
+        /* background-color: purple; */
+        text-align: left;
+
+        section {
+            display: flex;
+
+            .icon-graduacao {
+                margin-top: -1%;
+                margin-right: 1%;
+                width: 4%;
+                min-width: 30px;
+                height: 4%;
+            }
+        }
+
+        h1 {
+            /* font-size: 42pt; */
+            font-size: 5.9vh;
+        }
+
+        p {
+            margin-top: -10px;
+        }
+
+        .titulo {
+            /* font-size: 24pt; */
+            font-size: 3.5vh;
+        }
+
+        .instituicao {
+            /* font-size: 18pt; */
+            font-size: 2.5vh;
+        }
+    }
+}
+
+#tecnologias {
+    height: 50%;
+    /* background-color: purple; */
+    display: flex;
+    flex-direction: column;
+
+    h1 {
+        margin-top: 3%;
+        /* font-size: 42pt; */
+        font-size: 5.9vh;
+    }
+}
+
+.stacks {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2%;
+    width: 100%;
+    margin-bottom: 10px;
+
+    .bola-branca {
+        background-color: white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100px;
+        height: 100px;
+
+        img {
+            width: 70%;
+            height: 70%;
+            object-fit: contain;
+        }
+    }
+}
+
+#projetos-div {
+    height: 1080px;
+
+    h1 {
+        /* font-size: 42pt; */
+        font-size: 5.9vh;
+    }
+
+    .projetos {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2%;
+        width: 100%;
+        margin-bottom: 10px;
+        height: 60%;
+
+        .bola-branca {
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 300px;
+            height: 300px;
+
+            img {
+                width: 70%;
+                height: 70%;
+                object-fit: contain;
+            }
+        }
+    }
+}
+
+/* responsividade query */
+
+@media screen and (max-width: 950px) {
+    #projetos-div .projetos {
+        flex-direction: column;
+        height: auto;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .navbar {
+        display: none;
+    }
+
+    #tecnologias {
+        margin-top: 150px;
+    }
+
+    #projetos-div {
+        margin-top: 50px;
+    }
+
+    #formacoes {
+        .titulo {
+            font-size: 1.25vh;
+        }
+
+        .instituicao {
+            font-size: 0.75vh;
+        }
+
+        h1 {
+            font-size: 4vh !important;
+        }
+    }
+}
+
+/* configurações */
+
+/* Para navegadores baseados em WebKit (Chrome, Safari, Opera) */
+::-webkit-scrollbar {
+    width: 10px;
+    /* largura da barra de rolagem */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #e53935;
+    /* cor do polegar da barra de rolagem */
+}
+
+/* Para o Firefox */
+/* Note que a cor do polegar não é diretamente modificável no Firefox */
+/* Então, definimos a cor da barra de rolagem inteira */
+/* Você pode ajustar isso conforme necessário */
+/* A barra de rolagem no Firefox terá a mesma cor definida para o fundo */
+/* Você pode mudar a cor de fundo do seu corpo (background-color) para combinar com a cor da barra de rolagem */
+body {
+    scrollbar-color: #e53935;
+    /* cor da barra de rolagem e do polegar no Firefox */
+    scrollbar-width: thin;
+    /* largura da barra de rolagem no Firefox */
+}
+
+/* Desativa a seleção de texto */
+body {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer */
+    user-select: none;
+    /* Chrome e Opera */
+}
+
+img {
+    pointer-events: none;
+    /* Desativa eventos de ponteiro, incluindo o clique do mouse */
+}
