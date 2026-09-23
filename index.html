@@ -1,162 +1,866 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="Código/css/style.css">
-    <title>Yago Cortez - Dev</title>
+    <title>Yago Cortez | Full-Stack Architect</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Devicon -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+
+    <style>
+        /* ===== DESIGN SYSTEM ===== */
+        :root {
+            --bg: #030303;
+            --card-bg: #0a0a0a;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.15);
+            --primary: #ffffff;
+            --secondary: #a1a1aa;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.15);
+            --nav-bg: rgba(10, 10, 10, 0.7);
+            --dropdown-bg: rgba(10, 10, 10, 0.95);
+            --subtle-bg: rgba(255, 255, 255, 0.05);
+            --subtle-bg-hover: rgba(255, 255, 255, 0.1);
+            --grad-start: #ffffff;
+            --grad-end: rgba(255, 255, 255, 0.4);
+            --font-main: 'Inter', sans-serif;
+            --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        [data-theme="light"] {
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --border: rgba(0, 0, 0, 0.1);
+            --border-hover: rgba(0, 0, 0, 0.2);
+            --primary: #0f172a;
+            --secondary: #64748b;
+            --nav-bg: rgba(255, 255, 255, 0.7);
+            --dropdown-bg: rgba(255, 255, 255, 0.95);
+            --subtle-bg: rgba(0, 0, 0, 0.05);
+            --subtle-bg-hover: rgba(0, 0, 0, 0.1);
+            --grad-start: #0f172a;
+            --grad-end: rgba(15, 23, 42, 0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg);
+            color: var(--primary);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        #cursor-glow {
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 1; }
+
+        /* ===== NAVEGAÇÃO ===== */
+        .glass-nav {
+            position: fixed;
+            top: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 700px;
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 0.6rem 1.5rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.4s ease, border-color 0.4s ease;
+        }
+        .logo { font-weight: 800; font-size: 1.1rem; letter-spacing: -1px; }
+        .logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 1rem; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--secondary); font-size: 0.85rem; font-weight: 500; transition: var(--transition); }
+        .nav-links a:hover { color: var(--primary); }
+
+        .theme-btn {
+            background: transparent;
+            border: none;
+            color: var(--secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.4rem;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+        .theme-btn:hover { color: var(--primary); background: var(--subtle-bg); }
+        [data-theme="light"] .sun-icon { display: none; }
+        [data-theme="light"] .moon-icon { display: block !important; }
+
+        /* ===== SELETOR DE IDIOMA ===== */
+        .custom-lang-selector {
+            position: relative;
+            font-family: var(--font-main);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--secondary);
+            user-select: none;
+        }
+        .lang-selected {
+            background: var(--subtle-bg);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 0.4rem 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+        .lang-selected:hover { color: var(--primary); border-color: var(--accent); }
+        .lang-options {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: var(--dropdown-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            z-index: 99;
+            min-width: 90px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        .lang-options.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        .lang-option {
+            padding: 0.6rem 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+        .lang-option:hover { background: var(--subtle-bg-hover); color: var(--primary); }
+        .flag-icon { width: 16px; border-radius: 2px; }
+
+        /* ===== HERO ===== */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 4rem;
+        }
+        .eyebrow {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.04em;
+            margin-bottom: 1.5rem;
+        }
+        .text-gradient {
+            background: linear-gradient(to bottom, var(--grad-start) 40%, var(--grad-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-sub {
+            color: var(--secondary);
+            font-size: 1.1rem;
+            max-width: 550px;
+            margin-bottom: 2.5rem;
+        }
+        .btn-main {
+            background: var(--primary);
+            color: var(--bg);
+            padding: 0.8rem 2rem;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        .btn-main:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--accent-glow); }
+
+        /* ===== BENTO ===== */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-auto-rows: minmax(240px, auto);
+            gap: 1.5rem;
+            margin: 4rem 0;
+        }
+        .bento-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .bento-item:hover { border-color: var(--border-hover); background: var(--subtle-bg); }
+
+        /* ===== TECH ===== */
+        .tech-section { margin: 6rem 0; }
+        .tech-filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-bottom: 3.5rem;
+        }
+        .filter-btn {
+            background: var(--subtle-bg);
+            border: 1px solid var(--border);
+            color: var(--secondary);
+            padding: 0.5rem 1.2rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-main);
+        }
+        .filter-btn:hover { border-color: var(--accent); color: var(--primary); }
+        .filter-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .tech-category {
+            margin-bottom: 3.5rem;
+            transition: all 0.4s ease;
+            opacity: 1;
+            transform: scale(1);
+        }
+        .tech-category.hidden { display: none; opacity: 0; transform: scale(0.95); }
+        .category-title {
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .tech-flex-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .tech-circle {
+            width: 75px;
+            height: 75px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.8rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .tech-circle:hover {
+            transform: translateY(-8px) scale(1.1);
+            box-shadow: 0 10px 25px var(--accent-glow);
+        }
+        .text-fallback {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #000;
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        /* ===== PROJETOS ===== */
+        .section-label { font-size: 2rem; font-weight: 800; margin-bottom: 2rem; letter-spacing: -1px; }
+        .project-featured {
+            background: linear-gradient(145deg, var(--card-bg) 0%, var(--bg) 100%);
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            padding: 3rem;
+            margin-bottom: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            align-items: center;
+            transition: var(--transition);
+        }
+        .project-label { color: var(--accent); font-weight: 700; font-size: 0.7rem; text-transform: uppercase; }
+        .project-featured h3 { font-size: 2rem; margin: 0.5rem 0 1rem; }
+        .project-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1.5rem; }
+        .tag {
+            background: var(--subtle-bg);
+            border: 1px solid var(--border);
+            padding: 0.3rem 0.8rem;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            color: var(--secondary);
+            transition: var(--transition);
+        }
+
+        .project-secondary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 6rem;
+        }
+        .project-small {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            border-radius: 24px;
+            transition: var(--transition);
+        }
+        .project-small:hover { border-color: var(--accent); }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 6rem 0 3rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+        .social-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; }
+        .social-links a { color: var(--secondary); text-decoration: none; font-size: 0.9rem; transition: 0.3s; }
+        .social-links a:hover { color: var(--primary); }
+
+        /* ===== ANIMAÇÕES ===== */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* ===== RESPONSIVO ===== */
+        @media (max-width: 900px) { .bento-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) {
+            .project-featured, .project-secondary { grid-template-columns: 1fr; }
+            .project-featured { padding: 2rem; }
+            h1 { font-size: 3rem; }
+            .tech-circle { width: 65px; height: 65px; font-size: 2.2rem; }
+            .text-fallback { font-size: 0.75rem; }
+            .nav-links a { display: none; }
+        }
+    </style>
 </head>
-
 <body>
-    <div class="navbar">
-        <a href="#" class="bola-branca"><img src="Código/img/icon/navBar/home-icon-preto.png" alt="home"></a>
-        <a href="#sobre-mim-div" class="bola-branca"><img src="Código/img/icon/navBar/user-icon-preto.png" alt="sobre mim"></a>
-        <a href="#projetos-div" class="bola-branca"><img src="Código/img/icon/navBar/projetos-icon-preto.png" alt="projetos"></a>
-    </div>
 
-    <header>
-        <div>
-            <h1>Yago Cortez</h1>
-            <h2 class="font-red">Full-Stack developer</h2>
-            <div class="conexoes">
-                <a href="https://www.linkedin.com/in/yago-cortez-9211512a7/" target="_blank">
-                    <img src="Código/img/icon/linkedin branco.png" alt="LinkedIn">
-                </a>
-                <a href="https://github.com/Yagowc1" target="_blank">
-                    <img src="Código/img/icon/github branco.png" alt="GitHub">
-                </a>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=yagowc1.cortez@gmail.com" target="_blank">
-                    <img src="Código/img/icon/gmail branco.png" alt="Gmail">
-                </a>
+    <!-- ===== CONTAINER PARA O VLIBRAS (será preenchido dinamicamente) ===== -->
+    <div id="vlibras-container"></div>
+
+    <div id="cursor-glow"></div>
+
+    <!-- ===== NAV ===== -->
+    <nav class="glass-nav">
+        <div class="logo">YAGO<span>CORTEZ</span></div>
+        <div class="nav-links">
+            <a href="#about" data-i18n="nav-about">Sobre</a>
+            <a href="#tech" data-i18n="nav-tech">Tecnologias</a>
+            <a href="#projects" data-i18n="nav-projects">Projetos</a>
+
+            <div class="custom-lang-selector" id="lang-selector">
+                <div class="lang-selected">
+                    <img src="https://flagcdn.com/w20/br.png" alt="PT" class="flag-icon"> PT
+                </div>
+                <div class="lang-options">
+                    <div class="lang-option" data-value="pt-br">
+                        <img src="https://flagcdn.com/w20/br.png" alt="PT" class="flag-icon"> PT
+                    </div>
+                    <div class="lang-option" data-value="en">
+                        <img src="https://flagcdn.com/w20/us.png" alt="EN" class="flag-icon"> EN
+                    </div>
+                    <div class="lang-option" data-value="es">
+                        <img src="https://flagcdn.com/w20/es.png" alt="ES" class="flag-icon"> ES
+                    </div>
+                </div>
             </div>
+
+            <button id="theme-toggle" class="theme-btn" aria-label="Alternar Tema">
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
         </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <header class="hero container">
+        <span class="eyebrow" data-i18n="hero-eyebrow">Full-Stack Developer</span>
+        <h1 data-i18n="hero-title">Transformando ideias em produtos <br></h1>
+        <p class="hero-sub" data-i18n="hero-sub">Integridade e conformidade by design</p>
+        <a href="#projects" class="btn-main" data-i18n="hero-btn">Ver Projetos</a>
     </header>
 
-    <div id="sobre-mim-div">
-        <section id="diplomas">
-            <div id="eu-section">
-                <img id="eu" src="Código/img/Eu-redondo.png" alt="">
+    <main class="container">
+        <!-- ABOUT -->
+        <section id="about" class="bento-grid reveal">
+            <div class="bento-item">
+                <span class="project-label" data-i18n="about-status-label">Status</span>
+                <h2 style="margin-top: 0.5rem;" data-i18n="about-status-title">Engenharia & Arquitetura</h2>
+                <p style="color: var(--secondary); font-size: 0.95rem;" data-i18n="about-status-desc">União de rigor técnico com usabilidade e performance.</p>
+            </div>
+            <div class="bento-item" style="background: var(--accent-glow);">
+                <span class="project-label" data-i18n="about-edu-label">Educação</span>
+                <h2 style="margin-top: 0.5rem;" data-i18n="about-edu-title">Formação Base</h2>
+                <p style="color: var(--secondary); font-size: 0.95rem;" data-i18n="about-edu-desc">Tecnólogo em Sistemas para Internet e Técnico em Informática.</p>
+            </div>
+        </section>
 
-                <div class="conexoes">
-                    <a href="https://www.linkedin.com/in/yago-cortez-9211512a7/" target="_blank">
-                        <img src="Código/img/icon/linkedin branco.png" alt="LinkedIn">
-                    </a>
-                    <a href="https://github.com/Yagowc1" target="_blank">
-                        <img src="Código/img/icon/github branco.png" alt="GitHub">
-                    </a>
-                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=yagowc1.cortez@gmail.com" target="_blank">
-                        <img src="Código/img/icon/gmail branco.png" alt="Gmail">
-                    </a>
+        <!-- TECH -->
+        <section id="tech" class="tech-section reveal">
+            <h2 class="section-label" style="text-align: center;" data-i18n="tech-title">Stack</h2>
+            <div class="tech-filter-container">
+                <button class="filter-btn active" data-filter="all" data-i18n="filter-all">Todas</button>
+                <button class="filter-btn" data-filter="frontend" data-i18n="filter-frontend">Frontend & UI</button>
+                <button class="filter-btn" data-filter="backend" data-i18n="filter-backend">Backend & Dados</button>
+                <button class="filter-btn" data-filter="infra" data-i18n="filter-infra">Infra & Cloud</button>
+                <button class="filter-btn" data-filter="devsecops" data-i18n="filter-devsecops">DevSecOps</button>
+                <button class="filter-btn" data-filter="tools" data-i18n="filter-tools">Ferramentas</button>
+            </div>
+
+            <div class="tech-category" data-category="frontend">
+                <h4 class="category-title" data-i18n="cat-frontend">Frontend & UI</h4>
+                <div class="tech-flex-grid">
+                    <div class="tech-circle" title="HTML5"><i class="devicon-html5-plain colored"></i></div>
+                    <div class="tech-circle" title="CSS3"><i class="devicon-css3-plain colored"></i></div>
+                    <div class="tech-circle" title="JavaScript"><i class="devicon-javascript-plain colored"></i></div>
+                    <div class="tech-circle" title="React"><i class="devicon-react-original colored"></i></div>
+                    <div class="tech-circle" title="Vite"><i class="devicon-vitejs-plain colored"></i></div>
+                    <div class="tech-circle" title="Tailwind CSS"><i class="devicon-tailwindcss-plain colored"></i></div>
+                    <div class="tech-circle" title="Bootstrap"><i class="devicon-bootstrap-plain colored"></i></div>
                 </div>
             </div>
 
-            <div id="formacoes">
-                <h1>Yago Cortez</h1>
+            <div class="tech-category" data-category="backend">
+                <h4 class="category-title" data-i18n="cat-backend">Backend & Dados</h4>
+                <div class="tech-flex-grid">
+                    <div class="tech-circle" title="Python"><i class="devicon-python-plain colored"></i></div>
+                    <div class="tech-circle" title="Flask"><i class="devicon-flask-original" style="color: #000;"></i></div>
+                    <div class="tech-circle" title="Node.js"><i class="devicon-nodejs-plain colored"></i></div>
+                    <div class="tech-circle" title="PostgreSQL"><i class="devicon-postgresql-plain colored"></i></div>
+                    <div class="tech-circle" title="SQLite"><i class="devicon-sqlite-plain colored"></i></div>
+                    <div class="tech-circle" title="SQLAlchemy"><i class="devicon-sqlalchemy-plain" style="color: #d71f00;"></i></div>
+                    <div class="tech-circle" title="MongoDB"><i class="devicon-mongodb-plain colored"></i></div>
+                </div>
+            </div>
+
+            <div class="tech-category" data-category="infra">
+                <h4 class="category-title" data-i18n="cat-infra">Infraestrutura & Cloud</h4>
+                <div class="tech-flex-grid">
+                    <div class="tech-circle" title="Docker"><i class="devicon-docker-plain colored"></i></div>
+                    <div class="tech-circle" title="Kubernetes"><i class="devicon-kubernetes-plain colored"></i></div>
+                    <div class="tech-circle" title="Windows"><i class="devicon-windows8-original colored"></i></div>
+                    <div class="tech-circle" title="Linux"><i class="devicon-linux-plain" style="color: #000;"></i></div>
+                    <div class="tech-circle text-fallback" title="Render Cloud">Render<br>Cloud</div>
+                </div>
+            </div>
+
+            <div class="tech-category" data-category="devsecops">
+                <h4 class="category-title" data-i18n="cat-devsecops">DevSecOps</h4>
+                <div class="tech-flex-grid">
+                    <div class="tech-circle text-fallback" title="OWASP ZAP">OWASP<br>ZAP</div>
+                    <div class="tech-circle text-fallback" title="Bandit SAST">Bandit</div>
+                    <div class="tech-circle text-fallback" title="pip-audit">pip<br>audit</div>
+                    <div class="tech-circle text-fallback" title="git-secrets">git<br>secrets</div>
+                </div>
+            </div>
+
+            <div class="tech-category" data-category="tools">
+                <h4 class="category-title" data-i18n="cat-tools">Ferramentas & Design</h4>
+                <div class="tech-flex-grid">
+                    <div class="tech-circle" title="Git"><i class="devicon-git-plain colored"></i></div>
+                    <div class="tech-circle" title="GitHub"><i class="devicon-github-original" style="color: #000;"></i></div>
+                    <div class="tech-circle" title="VS Code"><i class="devicon-vscode-plain colored"></i></div>
+                    <div class="tech-circle" title="Markdown"><i class="devicon-markdown-original" style="color: #000;"></i></div>
+                    <div class="tech-circle" title="Godot Engine"><i class="devicon-godot-plain colored"></i></div>
+                    <div class="tech-circle" title="Photoshop"><i class="devicon-photoshop-plain colored"></i></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS -->
+        <section id="projects">
+            <h2 class="section-label reveal" data-i18n="projects-title">Projetos de Impacto</h2>
+
+            <article class="project-featured reveal">
                 <div>
-                    <section>
-                        <img class="icon-graduacao" src="Código/img/icon/chapeu-da-graduacao.png" alt="">
-                        <div>
-                            <p class="font-red titulo">Técnico em Informática</p>
-                            <p class="font-blue instituicao">IFRN - 2019 - 2023</p>
-                        </div>
-                    </section>
-
-                    <section>
-                        <img class="icon-graduacao" src="Código/img/icon/chapeu-da-graduacao.png" alt="">
-                        <div>
-                            <p class="font-red titulo">Tecnólogo em Sistemas para Internet</p>
-                            <p class="font-blue instituicao">IFRN - 2023 - Presente</p>
-                        </div>
-                    </section>
+                    <span class="project-label" data-i18n="proj-cer-label">Case</span>
+                    <h3>CERdigital</h3>
+                    <p style="color: var(--secondary); margin-bottom: 1.5rem;" data-i18n="proj-cer-desc">
+                        Sistema de gestão aplicado ao âmbito SUS.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Flask</span>
+                        <span class="tag">Cryptography</span>
+                        <span class="tag">Render Cloud</span>
+                    </div>
                 </div>
+            </article>
+
+            <div class="project-secondary">
+                <article class="project-small reveal">
+                    <span class="project-label" data-i18n="proj-galo-label">Game Dev</span>
+                    <h3 style="margin: 0.5rem 0;">O Galo Cleitinho</h3>
+                    <p style="color: var(--secondary); font-size: 0.9rem;" data-i18n="proj-galo-desc">Jogo educacional para ensino de lógica de programação.</p>
+                    <div class="project-tags">
+                        <span class="tag">Godot 4</span>
+                        <span class="tag">GDScript</span>
+                    </div>
+                </article>
+
+                <article class="project-small reveal">
+                    <span class="project-label" data-i18n="proj-yago-label">Content</span>
+                    <h3 style="margin: 0.5rem 0;">YagoDev</h3>
+                    <p style="color: var(--secondary); font-size: 0.9rem;" data-i18n="proj-yago-desc">Canal no YouTube focado em disseminar bom conteúdo.</p>
+                    <div class="project-tags">
+                        <span class="tag">YouTube</span>
+                        <span class="tag">Community</span>
+                    </div>
+                </article>
             </div>
         </section>
+    </main>
 
-        <section id="tecnologias">
-            <h1>Tecnologias</h1>
+    <footer class="footer container">
+        <h2 style="font-size: 2rem; margin-bottom: 1rem;" data-i18n="footer-title">Vamos construir o futuro?</h2>
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/yago-developer/">LinkedIn</a>
+            <a href="https://github.com/Yagowc1">GitHub</a>
+            <a href="mailto:yagowc1.cortez@gmail.com">Email</a>
+        </div>
+        <p style="color: var(--secondary); font-size: 0.75rem;">© 2026 Yago Cortez</p>
+    </footer>
 
-            <div class="stacks">
-                <div class="bola-branca">
-                    <img src="Código/img/icon/estilo/html-5.png" alt="">
-                </div>
-                <div class="bola-branca">
-                    <img src="Código/img/icon/estilo/css-3.png" alt="">
-                </div>
-                <div class="bola-branca">
-                    <img src="Código/img/icon/estilo/bootstrap-logo.png" alt="">
-                </div>
-                <div class="bola-branca">
-                    <img src="Código/img/icon/estilo/markdown-icon.png" alt="">
-                </div>
-            </div>
+    <!-- ===== SCRIPTS ===== -->
+    <!-- O script do VLibras será carregado apenas uma vez, dinamicamente -->
+    <script>
+        // --------------------------------------------------------------
+        // 1. GERENCIAMENTO DO VLIBRAS (carrega uma vez e mostra/oculta)
+        // --------------------------------------------------------------
+        let vlibrasLoaded = false;
 
-            <div class="stacks">
-                <div class="bola-branca">
-                    <img src="Código/img/icon/programacao/python-icon.png" alt="">
-                </div>
-                <div class="bola-branca">
-                    <img src="Código/img/icon/programacao/flask-icon.png" alt="">
-                </div>
-                <div class="bola-branca">
-                    <img src="Código/img/icon/programacao/js-icon.png" alt="">
-                </div>
-                <div class="bola-branca">
-                    <img src="Código/img/icon/programacao/node-icon.png" alt="">
-                </div>
-            </div>
+        function loadVlibras() {
+            if (vlibrasLoaded) return;
+            const script = document.createElement('script');
+            script.src = 'https://vlibras.gov.br/app/vlibras-plugin.js';
+            script.async = true;
+            script.onload = () => {
+                vlibrasLoaded = true;
+                // Após o carregamento, o widget cria os elementos.
+                // Aguarda um pouco para garantir que o DOM foi atualizado.
+                setTimeout(() => {
+                    // Aplica a visibilidade baseada no idioma atual
+                    const currentLang = getCurrentLanguage();
+                    setVlibrasVisibility(currentLang === 'pt-br');
+                }, 200);
+            };
+            document.body.appendChild(script);
+        }
 
-            <div class="stacks">
-                <div class="bola-branca">
-                    <img src="Código/img/icon/bd/sqlite-icon.png" alt="">
-                </div>
-                <div class="bola-branca">
-                    <img src="Código/img/icon/bd/sqla-icon.png" alt="">
-                </div>
-                <div class="bola-branca">
-                    <img src="Código/img/icon/bd/postgresql-icon.png" alt="">
-                </div>
-                <div class="bola-branca">
-                    <img src="Código/img/icon/bd/mongodb-icon.png" alt="">
-                </div>
-            </div>
-        </section>
+        function getCurrentLanguage() {
+            // Lê o idioma atual do seletor (padrão pt-br)
+            const selected = document.querySelector('.lang-selected');
+            if (!selected) return 'pt-br';
+            // Pega o atributo data-value do item ativo ou verifica o texto
+            // Retornar o valor salvo em uma variável global
+            return window.currentLang || 'pt-br';
+        }
 
-        </section>
-    </div>
+        function setVlibrasVisibility(show) {
+            const wrapper = document.getElementById('vlibras-access-wrapper');
+            if (wrapper) {
+                wrapper.style.display = show ? 'flex' : 'none';
+            }
+        }
 
-    <div id="projetos-div">
-        <h1>Projetos</h1>
+        function updateVlibrasForLang(lang) {
+            // Se o VLibras ainda não foi carregado e o idioma é pt-br, carrega
+            if (lang === 'pt-br' && !vlibrasLoaded) {
+                loadVlibras();
+                return;
+            }
+            // Se já carregado, apenas mostra/oculta
+            if (vlibrasLoaded) {
+                setVlibrasVisibility(lang === 'pt-br');
+            }
+        }
 
-        <section class="projetos">
-            <div>
-                <h2>Book Wink</h2>
-                <div class="bola-branca">
-                    <img src="Código/img/icon/projetos/bookWink-logo.png" alt="">
-                </div>
-            </div>
+        // --------------------------------------------------------------
+        // 2. DEMAIS FUNCIONALIDADES
+        // --------------------------------------------------------------
 
-            <div>
-                <h2>Cifra Lite</h2>
-                <div class="bola-branca">
-                    <img src="Código/img/icon/projetos/CifraLite-logo.png" alt="">
-                </div>
-            </div>
+        // Tema
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const rootElement = document.documentElement;
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            rootElement.setAttribute('data-theme', savedTheme);
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+            rootElement.setAttribute('data-theme', 'light');
+        }
+        themeToggleBtn.addEventListener('click', () => {
+            const current = rootElement.getAttribute('data-theme');
+            const newTheme = current === 'light' ? 'dark' : 'light';
+            rootElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
 
-            <!-- <div>
-                <h2>Tarefando</h2>
-                <div class="bola-branca">
-                    <img src="Código/img/icon/projetos/FoodPlus-logo.png" alt="">
-                </div>
-            </div> -->
-        </section>
+        // Glow do mouse
+        const glow = document.getElementById('cursor-glow');
+        window.addEventListener('mousemove', (e) => {
+            glow.style.left = `${e.clientX}px`;
+            glow.style.top = `${e.clientY}px`;
+        });
 
-        <p>“Estou comprometido em fornecer soluções inovadoras e eficazes para ajudar a transformar suas ideias em
-            realidade."</p>
+        // Reveal on scroll
+        const observerOptions = { threshold: 0.12 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, observerOptions);
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    </div>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.getBoundingClientRect().top + window.scrollY - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
 
-    <script src="Código/js/script.js"></script>
+        // Filtros de tecnologia
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const techCategories = document.querySelectorAll('.tech-category');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filterValue = btn.getAttribute('data-filter');
+                techCategories.forEach(category => {
+                    if (filterValue === 'all' || category.getAttribute('data-category') === filterValue) {
+                        category.classList.remove('hidden');
+                    } else {
+                        category.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        // --------------------------------------------------------------
+        // 3. SELETOR DE IDIOMA + TRADUÇÃO
+        // --------------------------------------------------------------
+        const langSelector = document.getElementById('lang-selector');
+        const langSelected = langSelector.querySelector('.lang-selected');
+        const langOptions = langSelector.querySelector('.lang-options');
+        const langOptionItems = langSelector.querySelectorAll('.lang-option');
+
+        const translations = {
+            "pt-br": {
+                "nav-about": "Sobre",
+                "nav-tech": "Tecnologias",
+                "nav-projects": "Projetos",
+                "hero-eyebrow": "Full-Stack Developer",
+                "hero-title": "Transformando ideias em produtos",
+                "hero-sub": "Integridade e conformidade by design",
+                "hero-btn": "Ver Projetos",
+                "about-status-label": "Status",
+                "about-status-title": "Engenharia & Arquitetura",
+                "about-status-desc": "União de rigor técnico com usabilidade e performance.",
+                "about-edu-label": "Educação",
+                "about-edu-title": "Formação Base",
+                "about-edu-desc": "Tecnólogo em Sistemas para Internet e Técnico em Informática.",
+                "tech-title": "Stack",
+                "filter-all": "Todas",
+                "filter-frontend": "Frontend & UI",
+                "filter-backend": "Backend & Dados",
+                "filter-infra": "Infra & Cloud",
+                "filter-devsecops": "DevSecOps",
+                "filter-tools": "Ferramentas",
+                "cat-frontend": "Frontend & UI",
+                "cat-backend": "Backend & Dados",
+                "cat-infra": "Infraestrutura & Cloud",
+                "cat-devsecops": "DevSecOps",
+                "cat-tools": "Ferramentas & Design",
+                "projects-title": "Projetos de Impacto",
+                "proj-cer-label": "Case",
+                "proj-cer-desc": "Sistema de gestão aplicado ao âmbito SUS.",
+                "proj-galo-label": "Game Dev",
+                "proj-galo-desc": "Jogo educacional para ensino de lógica de programação.",
+                "proj-yago-label": "Content",
+                "proj-yago-desc": "Canal no YouTube focado em disseminar bom conteúdo.",
+                "footer-title": "Vamos construir o futuro?"
+            },
+            "en": {
+                "nav-about": "About",
+                "nav-tech": "Stack",
+                "nav-projects": "Projects",
+                "hero-eyebrow": "Full-Stack Developer",
+                "hero-title": "Transforming ideas into products",
+                "hero-sub": "Integrity and compliance by design",
+                "hero-btn": "View Projects",
+                "about-status-label": "Status",
+                "about-status-title": "Engineering & Architecture",
+                "about-status-desc": "Combining technical rigor with usability and performance.",
+                "about-edu-label": "Education",
+                "about-edu-title": "Academic Background",
+                "about-edu-desc": "Degree in Internet Systems and Informatics Technician.",
+                "tech-title": "Stack",
+                "filter-all": "All",
+                "filter-frontend": "Frontend & UI",
+                "filter-backend": "Backend & Data",
+                "filter-infra": "Infra & Cloud",
+                "filter-devsecops": "DevSecOps",
+                "filter-tools": "Tools",
+                "cat-frontend": "Frontend & UI",
+                "cat-backend": "Backend & Data",
+                "cat-infra": "Infrastructure & Cloud",
+                "cat-devsecops": "DevSecOps",
+                "cat-tools": "Tools & Design",
+                "projects-title": "Impactful Projects",
+                "proj-cer-label": "Case Study",
+                "proj-cer-desc": "Management system applied to the public healthcare scope (SUS).",
+                "proj-galo-label": "Game Dev",
+                "proj-galo-desc": "Educational game for teaching programming logic.",
+                "proj-yago-label": "Content",
+                "proj-yago-desc": "YouTube channel focused on sharing quality content.",
+                "footer-title": "Let's build the future together?"
+            },
+            "es": {
+                "nav-about": "Sobre mí",
+                "nav-tech": "Tecnologías",
+                "nav-projects": "Proyectos",
+                "hero-eyebrow": "Full-Stack Developer",
+                "hero-title": "Transformando ideas en productos",
+                "hero-sub": "Integridad y cumplimiento by design",
+                "hero-btn": "Ver Proyectos",
+                "about-status-label": "Estado",
+                "about-status-title": "Ingeniería y Arquitectura",
+                "about-status-desc": "Uniendo rigor técnico con usabilidad y rendimiento.",
+                "about-edu-label": "Educación",
+                "about-edu-title": "Formación Base",
+                "about-edu-desc": "Tecnólogo en Sistemas para Internet y Técnico en Informática.",
+                "tech-title": "Stack",
+                "filter-all": "Todas",
+                "filter-frontend": "Frontend y UI",
+                "filter-backend": "Backend y Datos",
+                "filter-infra": "Infra y Nube",
+                "filter-devsecops": "DevSecOps",
+                "filter-tools": "Herramientas",
+                "cat-frontend": "Frontend y UI",
+                "cat-backend": "Backend y Datos",
+                "cat-infra": "Infraestructura y Nube",
+                "cat-devsecops": "DevSecOps",
+                "cat-tools": "Herramientas y Diseño",
+                "projects-title": "Proyectos de Impacto",
+                "proj-cer-label": "Caso",
+                "proj-cer-desc": "Sistema de gestión aplicado al ámbito de la salud pública (SUS).",
+                "proj-galo-label": "Game Dev",
+                "proj-galo-desc": "Juego educativo para enseñar lógica de programación.",
+                "proj-yago-label": "Contenido",
+                "proj-yago-desc": "Canal de YouTube centrado en difundir buen contenido.",
+                "footer-title": "¿Vamos a construir el futuro?"
+            }
+        };
+
+        // Abrir/fechar dropdown
+        langSelected.addEventListener('click', (e) => {
+            e.stopPropagation();
+            langOptions.classList.toggle('show');
+        });
+        document.addEventListener('click', () => {
+            langOptions.classList.remove('show');
+        });
+
+        // Mudança de idioma
+        langOptionItems.forEach(item => {
+            item.addEventListener('click', function () {
+                const lang = this.getAttribute('data-value');
+
+                // Atualiza o texto do seletor
+                langSelected.innerHTML = this.innerHTML;
+                langOptions.classList.remove('show');
+
+                // Traduz os elementos
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (translations[lang] && translations[lang][key]) {
+                        el.textContent = translations[lang][key];
+                    }
+                });
+
+                // Atualiza a variável global de idioma
+                window.currentLang = lang;
+
+                // Controla a visibilidade do VLibras
+                updateVlibrasForLang(lang);
+            });
+        });
+
+        // --------------------------------------------------------------
+        // 4. INICIALIZAÇÃO
+        // --------------------------------------------------------------
+        window.currentLang = 'pt-br'; // idioma padrão
+
+        // Carrega o VLibras (pela primeira vez) e mostra (pois é pt-br)
+        loadVlibras();
+
+    </script>
 </body>
-
 </html>
